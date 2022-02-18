@@ -8,16 +8,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Goutte\Client;
 
-
-use App\Models\Models;
-use App\Models\Generation;
-use App\Models\GenerationImage;
-use App\Models\GenerationDetail;
-use App\Models\Type;
-
-class GetImage implements ShouldQueue
+class ImageUploader implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -26,13 +18,11 @@ class GetImage implements ShouldQueue
      *
      * @return void
      */
-    protected $img;
-    protected $img_url;
-    public function __construct($img, $img_url)
+    protected $request;
+    public function __construct($data)
     {
         //
-        $this->img = $img;
-        $this->img_url = $img_url;
+        $this->request = $data;
     }
 
     /**
@@ -43,8 +33,8 @@ class GetImage implements ShouldQueue
     public function handle()
     {
         //
-        if (!file_exists($img)) {
-            file_put_contents($img, file_get_contents($img_url));
-        }
+        $imageName = time().'.'.$$this->request->image->extension();
+
+        $request->image->move(public_path('images'), $imageName);
     }
 }
