@@ -23,4 +23,24 @@ class GenerationController extends Controller
         }
         return view('admin.generation.index',$data);
     }
+
+    public function store()
+    {
+        //tba
+    }
+
+    public function delete($id)
+    {
+        if(Generation::find($id)->delete()){
+            return response()->json([
+                "status" => "OK",
+                "msg"   =>"Data has been deleted"
+            ]);
+        }else{
+            return response()->json([
+                "status" => "FAILED",
+                "msg"   => "Error, please contact the author for support!"
+            ]);
+        }
+    }
 }

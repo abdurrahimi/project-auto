@@ -39,9 +39,6 @@ class UserManagementController extends Controller
 
     public function store(Request $req)
     {
-        
-        
-
         if(!empty($req->id)){
             $data = $req->validate([
                 'username' => 'required|max:50',
@@ -83,6 +80,6 @@ class UserManagementController extends Controller
         return response()->json([
             "status" => "FAILED",
             "msg"   => "Error, please contact the author for support!"
-        ]); 
+        ]);
     }
 }

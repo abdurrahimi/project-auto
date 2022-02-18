@@ -30,7 +30,17 @@ class BrandController extends Controller
 
     public function delete($id)
     {
-        Brand::findOne($id)->delete();
+        if(Brand::find($id)->delete()){
+            return response()->json([
+                "status" => "OK",
+                "msg"   =>"Data has been deleted"
+            ]);
+        }else{
+            return response()->json([
+                "status" => "FAILED",
+                "msg"   => "Error, please contact the author for support!"
+            ]);
+        }
     }
 
     public function crawl()

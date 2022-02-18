@@ -13,7 +13,7 @@ class TypeController extends Controller
     //
     public function index($id,Request $req)
     {
-        
+
         if($req->ajax()){
             $datas = Type::where('generation_id',$id)->get();
             return response()->json([
@@ -26,5 +26,20 @@ class TypeController extends Controller
             "detail" => GenerationDetail::where('generation_id',$id)->first()
         ];
         return view('admin.type.index',$data);
+    }
+
+    public function delete($id)
+    {
+        if(Type::find($id)->delete()){
+            return response()->json([
+                "status" => "OK",
+                "msg"   =>"Data has been deleted"
+            ]);
+        }else{
+            return response()->json([
+                "status" => "FAILED",
+                "msg"   => "Error, please contact the author for support!"
+            ]);
+        }
     }
 }

@@ -23,4 +23,24 @@ class ModelController extends Controller
         }
         return view('admin.model.index',$data);
     }
+
+    public function store()
+    {
+        //tba
+    }
+
+    public function delete($id)
+    {
+        if(Models::find($id)->delete()){
+            return response()->json([
+                "status" => "OK",
+                "msg"   =>"Data has been deleted"
+            ]);
+        }else{
+            return response()->json([
+                "status" => "FAILED",
+                "msg"   => "Error, please contact the author for support!"
+            ]);
+        }
+    }
 }
