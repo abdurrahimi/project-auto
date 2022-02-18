@@ -90,10 +90,12 @@ class GetGeneration implements ShouldQueue
                 $id = Generation::insertGetId($data);
                 $job = (new \App\Jobs\GetSeries($id,$url[0]))
                     ->delay(now()->addSeconds(2));
+                dispatch($job);
                 /* $this->get_series($id,$url[0]); */
             }else{
                 $job = (new \App\Jobs\GetSeries($check->id,$check->url))
                     ->delay(now()->addSeconds(2));
+                dispatch($job);
                 /* $this->get_series($check->id,$check->url); */
             }
         });

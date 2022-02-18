@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class GenerationImage extends Model
 {
     use HasFactory;
+    use SoftDeletes;
     protected $table = 'generation_image';
     public $timestamps = false;
     protected $primaryKey = 'id';

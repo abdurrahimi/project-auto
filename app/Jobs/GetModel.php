@@ -77,6 +77,7 @@ class GetModel implements ShouldQueue
             }else{
                 $job = (new \App\Jobs\GetGeneration($check->id,$check->url))
                     ->delay(now()->addSeconds(2));
+                dispatch($job);
                 /* $this->get_generation($check->id,$check->url); */
             }
         });

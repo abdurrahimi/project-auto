@@ -23,6 +23,16 @@ class BrandController extends Controller
         return view('admin.brand.index');
     }
 
+    public function store()
+    {
+        //tba
+    }
+
+    public function delete($id)
+    {
+        Brand::findOne($id)->delete();
+    }
+
     public function crawl()
     {
         ini_set('max_execution_time', 0);
@@ -32,7 +42,7 @@ class BrandController extends Controller
         $data = $crawler->filter('a.marki_blok')->each(function ($node) {
             $href = $node->extract(array('href'));
             $img = $node->filter('img')->extract(array('src'));
-            
+
             /* echo $node->text()." | ".$href[0]." | " .$img[0]."<br>"; */
             /* print $node->text()."<br>"; */
             $check = Brand::where('brand',$node->text())->count();
@@ -60,13 +70,13 @@ class BrandController extends Controller
                 return response()->json([
                     "status" => "FAILED",
                     "msg"   => "Error, please contact the author for support!"
-                ]); 
+                ]);
             }
         }
 
         return response()->json([
             "status" => "FAILED",
             "msg"   => "Data from server already exist"
-        ]); 
+        ]);
     }
 }

@@ -43,8 +43,8 @@ class GetImage implements ShouldQueue
     public function handle()
     {
         //
-        if (!file_exists($img)) {
-            file_put_contents($img, file_get_contents($img_url));
+        if (!file_exists($this->img)) {
+            file_put_contents($this->img, file_get_contents($$this->img_url));
         }
     }
 }

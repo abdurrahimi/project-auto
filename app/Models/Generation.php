@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Generation extends Model
 {
     use HasFactory;
+    use SoftDeletes;
     protected $table = 'generation';
     public $timestamps = false;
     protected $primaryKey = 'id';

@@ -16,9 +16,9 @@ class CrawlController extends Controller
         $brand = Brand::all();
         foreach($brand as $item){
 
-            $job = (new \App\Jobs\CrawlQueue($item))
-                    ->delay(now()->addSeconds(2)); 
-    
+            $job = (new \App\Jobs\GetModel($item))
+                    ->delay(now()->addSeconds(2));
+
             dispatch($job);
         }
         return response()->json([

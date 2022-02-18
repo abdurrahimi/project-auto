@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Brand extends Model
 {
     use HasFactory;
+    use SoftDeletes;
     protected $table = 'brand';
     public $timestamps = false;
     protected $primaryKey = 'id';
