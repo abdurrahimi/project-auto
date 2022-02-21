@@ -36,7 +36,7 @@
       </div>
     </div>
   </section>
-  {{-- @include('admin.user-management.modal') --}}
+  @include('admin.brand.modal')
 @endsection
 
 @section('script')
@@ -74,7 +74,7 @@
                     sortable: false,
                     searchable: false,
                     render:function(data){
-                        return `<img src="{{url('${data.logo}')}}"> ${data.brand}`;
+                        return `<img src="{{url('${data.logo}')}}" style="width:40px; height:40px"> ${data.brand}`;
                     }
                 },
                 {
@@ -117,6 +117,91 @@
             }
         })
         
+    });
+
+    $('#modal').on('hidden.bs.modal', function () {
+        var datas = $('#form').serializeArray();
+        $.each(datas, function() {
+            $(`input[name="${this.name}"]`).val("");
+        });
     })
+
+    $('#btn-add-data').on('click',function(e){
+        var datas = $('#form').serializeArray();
+        $.each(datas, function() {
+            $(`input[name="${this.name}"]`).val("");
+        });
+        e.preventDefault();
+        $('#modal').modal('show');
+    });
+
+    $(document).on('click', '.btn-edit', function(){
+        var datas = $('#form').serializeArray();
+        $.each(datas, function() {
+            $(`input[name="${this.name}"]`).val("");
+        });
+        $('.is-invalid').removeClass('is-invalid');
+        var data = table.row($(this).closest('tr')).data();
+        $('input[name="brand"]').val(data.brand)
+        $('input[name="id"]').val(data.id)
+        $('#modal').modal('show');
+    });
+
+    $('.btn-submit').on('click',function(e){
+        e.preventDefault();
+        $('.is-invalid').removeClass('is-invalid');
+        $('.btn-submit').prop('disabled',true);
+        $('.btn-submit').text('Loading...');
+        var formData = new FormData($('#form')[0]);
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            method  : 'post',
+            url     : "{{url('admin/brand/store')}}",
+            //dataType: 'application/x-www-form-urlencoded',
+            processData: false,
+            contentType: false,
+            data    : formData,
+            success: function(data) {    
+    
+                table.ajax.reload(null,false);
+                alert(data.msg)
+                $('.btn-submit').prop('disabled',false);
+                $('.btn-submit').text('Submit');
+                $('.modal').modal('hide');
+                var datas = $('#form').serializeArray();
+                $.each(datas, function() {
+                    $(`input[name="${this.name}"]`).val("");
+                });
+                
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                $('.btn-submit').prop('disabled',false);
+                $('.btn-submit').text('Submit');
+                /* $.each(jqXHR.responseJSON.errors, function(key,val){
+                    
+                }) */
+            }
+        })
+        
+    });
+
+    $(document).on('click','.btn-delete',function(e){
+        if(confirm('Delete this data ?')){
+            var data = table.row($(this).closest('tr')).data();
+            $.ajax({
+                url: "{{url('admin/brand/delete')}}/"+data.id,
+                type: 'GET',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(data) {
+                    table.ajax.reload(null,false);
+                    alert(data.msg)
+                }
+            });
+        }
+    });
  </script>   
 @endsection

@@ -24,9 +24,34 @@ class ModelController extends Controller
         return view('admin.model.index',$data);
     }
 
-    public function store()
+    public function store(Request $req)
     {
-        //tba
+        if($req->ajax()){
+            if(isset($req->id) && !empty($req->id)){
+                $model = Models::find($req->id);
+            }else{
+                $model = new Models();
+            }
+
+            $model->brand_id = $req->brand_id;
+            $model->model = $req->model;
+            if($req->image !== null){
+                $imageName = $req->model.'.'.$req->image->extension();
+                $req->image->move(public_path('assets/photos/model'), $imageName);
+                $model->image = 'public/assets/photos/model/'.$imageName;
+            }
+            if($model->save()){
+                return response()->json([
+                    "status" => "OK",
+                    "msg"   =>"Data successfully saved"
+                ]);
+            }else{
+                return response()->json([
+                    "status" => "FAILED",
+                    "msg"   => "Error, please contact the author for support!"
+                ]);
+            }
+        }
     }
 
     public function delete($id)

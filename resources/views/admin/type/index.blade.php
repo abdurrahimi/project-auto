@@ -19,7 +19,7 @@
             <h5 class="card-title">{{-- {{$brand->brand}} --}} Type List</h5>
             <div class="card col-lg-12 row" style="padding: 10px">
                 <table>
-                <?= $detail->detail ?>
+                {{-- <?= $detail->detail ?> --}}
                 </table>
             </div>
             <a class="btn btn-primary btn-sm" id="btn-add-data" style="margin-bottom:20px">Add Data</a>

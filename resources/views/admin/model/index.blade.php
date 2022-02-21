@@ -19,7 +19,6 @@
           <div class="card-body">
             <h5 class="card-title">{{$brand->brand}} Model List</h5>
             <a class="btn btn-primary btn-sm" id="btn-add-data" style="margin-bottom:20px">Add Data</a>
-            <a class="btn btn-success btn-sm" id="btn-crawl-data" style="margin-bottom:20px">Crawl Data</a>
             <table id="tbl-user" class="table table-hovered" style="min-width:98%">
                 <thead>
                     <tr>
@@ -37,7 +36,7 @@
       </div>
     </div>
   </section>
-  {{-- @include('admin.user-management.modal') --}}
+  @include('admin.model.modal')
 @endsection
 
 @section('script')
@@ -105,5 +104,50 @@
         } );
     } ).draw();
 
+    $('#btn-add-data').on('click',function(){
+      $('#modal').modal('show');
+    })
+
+    $('#modal').on('hidden.bs.modal', function () {
+        var datas = $('#form').serializeArray();
+        $.each(datas, function() {
+            $(`input[name="${this.name}"]`).val("");
+        });
+    })
+
+    $('#form').on('submit',function(e){
+      e.preventDefault();
+      $('.is-invalid').removeClass('is-invalid');
+        $('.btn-submit').prop('disabled',true);
+        $('.btn-submit').text('Loading...');
+        var formData = new FormData($('#form')[0]);
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            method  : 'post',
+            url     : "{{url('admin/model/store')}}",
+            //dataType: 'application/x-www-form-urlencoded',
+            processData: false,
+            contentType: false,
+            data    : formData,
+            success: function(data) {    
+    
+                table.ajax.reload(null,false);
+                alert(data.msg)
+                $('.btn-submit').prop('disabled',false);
+                $('.btn-submit').text('Submit');
+                $('.modal').modal('hide');
+                
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                $('.btn-submit').prop('disabled',false);
+                $('.btn-submit').text('Submit');
+                /* $.each(jqXHR.responseJSON.errors, function(key,val){
+                    
+                }) */
+            }
+        })
+    })
  </script>   
 @endsection

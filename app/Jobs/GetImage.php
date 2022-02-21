@@ -43,8 +43,11 @@ class GetImage implements ShouldQueue
     public function handle()
     {
         //
-        if (!file_exists($this->img)) {
-            file_put_contents($this->img, file_get_contents($$this->img_url));
+        if($this->img_url != "https://www.auto-data.net/p"){
+
+            if (!file_exists($this->img)) {
+                file_put_contents($this->img, file_get_contents($this->img_url));
+            }
         }
     }
 }

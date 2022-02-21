@@ -23,9 +23,35 @@ class BrandController extends Controller
         return view('admin.brand.index');
     }
 
-    public function store()
+    public function store(Request $req)
     {
-        //tba
+        /* dd($req->logo->extension()); */
+        if($req->ajax()){
+            
+            if(empty($req->id)){
+                $brand = new Brand();
+                
+            }else{
+                $brand = Brand::find($req->id);
+            }
+            $brand->brand = $req->brand;
+            if($req->logo !== null){
+                $imageName = $req['brand'].'.'.$req->logo->extension();
+                $req->logo->move(public_path('assets/photos/logo'), $imageName);
+                $brand->logo = 'public/assets/photos/logo/'.$imageName;
+            }
+            if($brand->save()){
+                return response()->json([
+                    "status" => "OK",
+                    "msg"   =>"Data successfully saved"
+                ]);
+            }else{
+                return response()->json([
+                    "status" => "FAILED",
+                    "msg"   => "Error, please contact the author for support!"
+                ]);
+            }
+        }
     }
 
     public function delete($id)

@@ -188,9 +188,9 @@
                 
             },
             error: function (jqXHR, textStatus, errorThrown) {
+                $('.btn-submit').prop('disabled',false);
+                $('.btn-submit').text('Submit');
                 $.each(jqXHR.responseJSON.errors, function(key,val){
-                    $('.btn-submit').prop('disabled',false);
-                    $('.btn-submit').text('Submit');
                     $(`[name='${key}']`).addClass('is-invalid');
                     $(`[name='${key}']`).nextAll('.invalid-feedback').text(val.toString().replace(`${key}`, $(`[name="${key}"]`).next().text()));
                 })

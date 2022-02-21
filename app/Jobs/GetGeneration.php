@@ -66,20 +66,23 @@ class GetGeneration implements ShouldQueue
                 $detail = $node->filter('span')->each(function($n){
                     return $n->text();
                 });
-                $img_url = 'https://www.auto-data.net/'.$img[0];
                 $img = 'public/assets/photos/generation/'.str_replace("/","-",$title).".jpg";
                 /* if (!file_exists($img)) {
                     file_put_contents($img, file_get_contents($img_url));
                 } */
                 //Create download image jobs
-                $job = (new \App\Jobs\GetImage($img,$img_url))
-                    ->delay(now()->addSeconds(2));
+                if(isset($img[0]) && !empty($img[0])){
 
-                dispatch($job);
+                    $img_url = 'https://www.auto-data.net/'.$img[0];
+                    $job = (new \App\Jobs\GetImage($img,$img_url))
+                        ->delay(now()->addSeconds(2));
+    
+                    dispatch($job);
+                }
 
                 $data = [
                     "model_id" => $id,
-                    "url" => $url[0],
+                    "url" => isset($url[0]) && !empty($url[0]) ? $url[0] : "",
                     "image" => $img,
                     "title" => $title,
                     "year" => $year,
@@ -88,9 +91,11 @@ class GetGeneration implements ShouldQueue
                     "dimension" => isset($detail[1]) ? $detail[1] : ""
                 ];
                 $id = Generation::insertGetId($data);
-                $job = (new \App\Jobs\GetSeries($id,$url[0]))
-                    ->delay(now()->addSeconds(2));
-                dispatch($job);
+                if(isset($url[0]) && !empty($url[0])){
+                    $job = (new \App\Jobs\GetSeries($id,$url[0]))
+                        ->delay(now()->addSeconds(2));
+                    dispatch($job);
+                }
                 /* $this->get_series($id,$url[0]); */
             }else{
                 $job = (new \App\Jobs\GetSeries($check->id,$check->url))

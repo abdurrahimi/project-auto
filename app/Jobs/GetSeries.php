@@ -44,7 +44,7 @@ class GetSeries implements ShouldQueue
      */
     public function handle()
     {
-        //$client = new Client();
+        $client = new Client();
         $crawler = $client->request('GET', $this->url.$this->urls);
         $id = $this->id;
         $crawler->filter('img.inCarList')->each(function ($node) use ($id) {
@@ -82,6 +82,25 @@ class GetSeries implements ShouldQueue
         }
 
         $crawler->filter('.lgreen')->each(function ($node) use ($id) {
+            $url = $node->filter('a')->extract(array('href'))[0];
+            $title = $node->filter('.tit')->text();
+            $year = ($node->filter('.cur')->text() !== false ) ? $node->filter('.cur')->text() : $node->filter('.end')->text();
+            $details = $node->filter('td > a')->html();
+            $list = [
+                "generation_id" => $id,
+                "url" => $url,
+                "title" => $title,
+                "year" => $year,
+                "detail" => $details
+            ];
+            $check = Type::where('title',$title)->count();
+            if($check==0){
+                $series_id = Type::insertGetId($list);
+            }
+
+        });
+
+        $crawler->filter('.lred')->each(function ($node) use ($id) {
             $url = $node->filter('a')->extract(array('href'))[0];
             $title = $node->filter('.tit')->text();
             $year = ($node->filter('.cur')->text() !== false ) ? $node->filter('.cur')->text() : $node->filter('.end')->text();

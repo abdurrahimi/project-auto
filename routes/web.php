@@ -20,6 +20,7 @@ Route::get('/generation/{name}','GenerationController@index');
 Route::get('/type/{name}','TypeController@index');
 Route::get('/admin/login','Auth\AuthController@Admin')->name('login');
 Route::post('/auth','Auth\AuthController@Auth');
+Route::get('/top','CrawlController@getTopBrand');
 
 Route::group(['middleware' => ['auth']], function () use ($router) {
     $router->get('/admin/dashboard', 'Admin\DashboardController@index');
@@ -32,9 +33,13 @@ Route::group(['middleware' => ['auth']], function () use ($router) {
 
     //BRAND MANAGEMENT
     $router->get('/admin/brand','Admin\BrandController@index');
+    $router->post('/admin/brand/store','Admin\BrandController@store');
+    $router->get('/admin/brand/delete/{id}','Admin\BrandController@delete');
 
     //MODEL MANAFEMENT
     $router->get('/admin/model/{id}','Admin\ModelController@index');
+    $router->post('/admin/model/store','Admin\ModelController@store');
+    $router->get('/admin/model/delete/{id}','Admin\ModelController@delete');
 
     //GENERATION MANAFEMENT
     $router->get('/admin/generation/{id}','Admin\GenerationController@index');
